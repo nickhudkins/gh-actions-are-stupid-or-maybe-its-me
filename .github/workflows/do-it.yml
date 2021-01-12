@@ -16,7 +16,7 @@ jobs:
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: test
           MYSQL_ROOT_PASSWORD: password
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+        options: --health-cmd="mysql -uuser -ppassword -e 'SHOW DATABASES;'" --health-interval=5s --health-timeout=2s --health-retries=3
     steps:
       - name: Uhhh
         run: echo "DAMNIT BOB"
