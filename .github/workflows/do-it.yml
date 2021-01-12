@@ -1,0 +1,48 @@
+
+name: Make A Database
+on: push
+jobs:
+  MySQL:
+    runs-on: ubuntu-latest
+    env:
+      MYSQL_PWD: password
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: test
+          MYSQL_ROOT_PASSWORD: password
+        options: >-
+          --health-cmd "mysql -e SELECT 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Uhhh
+        run: echo "DAMNIT BOB"
+      # - name: Make It Easy
+      #   run: |
+      #     touch ~/.my.cnf
+      #     mysql_config_editor reset
+      #     mysql_config_editor set \
+      #     --host=127.0.0.1 \
+      #     --port=3306 \
+      #     --user=root
+      # - name: Setup Databases
+      #   run: |
+      #     mysql <<EOF
+      #       DROP DATABASE IF EXISTS damnit_bob_please_help;
+      #       CREATE DATABASE damnit_bob_please_help;
+      #     EOF
+      # - name: DoIt
+      #   run: |
+      #     echo "💾 The Following Databases Are Available"
+      #     mysql -e "SHOW DATABASES;"
+      # - name: Do Some Migrations
+      #   uses: docker://liquibase/liquibase:latest
+      #   with:
+      #     args: --version
