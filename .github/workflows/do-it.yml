@@ -17,7 +17,7 @@ jobs:
           MYSQL_DATABASE: nothing_to_see_here
           MYSQL_ROOT_PASSWORD: VerySecret!123
         options: >- 
-          --health-cmd="mysql -utest_db -pVerySecret\!123 -e 'SHOW DATABASES;'" 
+          --health-cmd="mysql -utest_db -p'VerySecret!123' -e 'SHOW DATABASES;'" 
           --health-interval=5s 
           --health-timeout=2s 
           --health-retries=3
