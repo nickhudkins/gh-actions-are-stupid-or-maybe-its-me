@@ -17,10 +17,10 @@ jobs:
           MYSQL_DATABASE: test
           MYSQL_ROOT_PASSWORD: password
         options: >-
-          --health-cmd 'mysql -e "SELECT 1"'
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd='mysql -e "SELECT 1"'
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
       - name: Uhhh
         run: echo "DAMNIT BOB"
