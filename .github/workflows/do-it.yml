@@ -10,9 +10,9 @@ jobs:
       test_db:
         image: mysql:5.7
         ports:
-          - 3306:3306
+          - 3306
         env:
-          MYSQL_ROOT_PASSWORD: some_password
+          MYSQL_ROOT_PASSWORD: VerySecret!123
         options: >- 
           --health-cmd="mysql -uroot -p\"$MYSQL_ROOT_PASSWORD\" -e 'SHOW DATABASES;'" 
           --health-interval=5s 
@@ -40,13 +40,13 @@ jobs:
           EOF
           mysql --login-path=test_db -e "SHOW DATABASES;"
         env:
-          MYSQL_PWD: some_password
+          MYSQL_PWD: VerySecret!123
       - name: Do Some Migrations
         uses: docker://liquibase/liquibase
         with:
           args: >-
             --username=root
-            --password=some_password
+            --password="VerySecret!123"
             --classpath=src
             --changeLogFile=sample.yaml
             --url=jdbc:mysql://test_db:3306/fuck_everything
