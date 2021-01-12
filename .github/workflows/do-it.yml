@@ -13,7 +13,7 @@ jobs:
           - 3306
         env:
           MYSQL_USER: test_db
-          MYSQL_PASSWORD: VerySecret!123
+          # MYSQL_PASSWORD: VerySecret!123
           MYSQL_DATABASE: nothing_to_see_here
           MYSQL_ROOT_PASSWORD: VerySecret!123
         options: >- 
