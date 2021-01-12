@@ -12,11 +12,13 @@ jobs:
         ports:
           - 3306
         env:
-          MYSQL_USER: user
           MYSQL_PASSWORD: password
-          MYSQL_DATABASE: test
           MYSQL_ROOT_PASSWORD: password
-        options: --health-cmd="mysql -uuser -ppassword -e 'SHOW DATABASES;'" --health-interval=5s --health-timeout=2s --health-retries=3
+        options: |
+          --health-cmd="mysql -e 'SHOW DATABASES;'" \
+          --health-interval=5s \
+          --health-timeout=2s \
+          --health-retries=3
     steps:
       - name: Uhhh
         run: echo "DAMNIT BOB"
