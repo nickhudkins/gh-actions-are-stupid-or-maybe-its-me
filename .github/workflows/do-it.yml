@@ -49,3 +49,4 @@ jobs:
             --classpath=src
             --changeLogFile=sample.yaml
             --url=jdbc:mysql://127.0.0.1:${{ job.services.mysql.ports[3306] }}/fuck_everything
+            update
