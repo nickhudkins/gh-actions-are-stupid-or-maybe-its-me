@@ -47,7 +47,6 @@ jobs:
           args: >-
             --username=root
             --password=VerySecret\!123
-            --classpath=src
             --changeLogFile=sample.yaml
             --url=jdbc:mysql://test_db:${{ job.services.test_db.ports[3306] }}/fuck_everything
             --logLevel=debug
