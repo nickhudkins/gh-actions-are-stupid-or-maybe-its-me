@@ -38,7 +38,7 @@ jobs:
           mysql -e "SHOW DATABASES;"
         env:
           MYSQL_PWD: VerySecret!123
-      # - name: Do Some Migrations
-      #   uses: docker://liquibase/liquibase:latest
-      #   with:
-      #     args: --version
+      - name: Do Some Migrations
+        uses: docker://liquibase/liquibase
+        with:
+          args: --version
