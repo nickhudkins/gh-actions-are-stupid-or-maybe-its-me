@@ -12,9 +12,11 @@ jobs:
         ports:
           - 3306
         env:
+          MYSQL_USER: test_db
           MYSQL_PWD: password
-          MYSQL_ROOT_PASSWORD: password
-        options: --health-cmd="mysql -e -uroot -ppassword 'SHOW DATABASES;'" --health-interval=5s --health-timeout=2s --health-retries=3
+          MYSQL_DATABASE: nothing_to_see_here_move_along
+          MYSQL_ROOT_PASSWORD: VerySecret!123
+        options: --health-cmd="mysql -e --user=test_db --password=VerySecret!123 'SHOW DATABASES;'" --health-interval=5s --health-timeout=2s --health-retries=3
     steps:
       - name: Uhhh
         run: echo "DAMNIT BOB"
