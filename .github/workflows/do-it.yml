@@ -14,11 +14,10 @@ jobs:
         env:
           MYSQL_USER: test_db
           MYSQL_PASSWORD: VerySecret!123
-          MYSQL_PWD: VerySecret!123
           MYSQL_DATABASE: nothing_to_see_here
           MYSQL_ROOT_PASSWORD: qwekdj8whjiY7tgfyHUIO8y7t
         options: >- 
-          --health-cmd="mysql -utest_db -e 'SHOW DATABASES;'" 
+          --health-cmd="mysql -utest_db -p'$MYSQL_PASSWORD' -e 'SHOW DATABASES;'" 
           --health-interval=5s 
           --health-timeout=2s 
           --health-retries=3
