@@ -12,36 +12,32 @@ jobs:
         ports:
           - 3306
         env:
-          MYSQL_USER: test_db
-          MYSQL_PASSWORD: VerySecret!123
+          MYSQL_USER: &mysqlUser test_db
+          MYSQL_PASSWORD: &mysqlPassword VerySecret!123
           MYSQL_DATABASE: nothing_to_see_here
           MYSQL_ROOT_PASSWORD: qwekdj8whjiY7tgfyHUIO8y7t
         options: >- 
-          --health-cmd="mysql -utest_db -p\"$MYSQL_PASSWORD\" -e 'SHOW DATABASES;'" 
+          --health-cmd="mysql -u\"$MYSQL_USER\" -p\"$MYSQL_PASSWORD\" -e 'SHOW DATABASES;'" 
           --health-interval=5s 
           --health-timeout=2s 
           --health-retries=3
     steps:
-      - name: Uhhh
-        run: echo "DAMNIT BOB"
-      # - name: Make It Easy
-      #   run: |
-      #     touch ~/.my.cnf
-      #     mysql_config_editor reset
-      #     mysql_config_editor set \
-      #     --host=127.0.0.1 \
-      #     --port=3306 \
-      #     --user=root
-      # - name: Setup Databases
-      #   run: |
-      #     mysql <<EOF
-      #       DROP DATABASE IF EXISTS damnit_bob_please_help;
-      #       CREATE DATABASE damnit_bob_please_help;
-      #     EOF
-      # - name: DoIt
-      #   run: |
-      #     echo "💾 The Following Databases Are Available"
-      #     mysql -e "SHOW DATABASES;"
+      - name: Make It Easy
+        run: |
+          touch ~/.my.cnf
+          mysql_config_editor reset
+          mysql_config_editor set \
+          --host=127.0.0.1 \
+          --port=${{ job.services.mysql.ports[3306] }} \
+          --user=$MYSQL_USER
+        env:
+          MYSQL_USER: *mysqlUser
+      - name: Show Me Them Databases
+        run: |
+          echo "💾 The Following Databases Are Available"
+          mysql -e "SHOW DATABASES;"
+        env:
+          MYSQL_PWD: *mysqlPassword
       # - name: Do Some Migrations
       #   uses: docker://liquibase/liquibase:latest
       #   with:
