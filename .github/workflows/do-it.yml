@@ -1,54 +1,30 @@
 
-name: Make A Database
+name: Initialize DB
 on: push
 jobs:
-  MySQL:
+  SecureCredentials:
     runs-on: ubuntu-latest
-    env:
-      MYSQL_PWD: password
-    services:
-      test_db:
-        image: mysql:5.7
-        ports:
-          - 3306
-        env:
-          MYSQL_ROOT_PASSWORD: VerySecret!123
-        options: >- 
-          --health-cmd="mysql -uroot -p\"$MYSQL_ROOT_PASSWORD\" -e 'SHOW DATABASES;'" 
-          --health-interval=5s 
-          --health-timeout=2s 
-          --health-retries=3
+    # Map a step output to a job output
+    outputs:
+      db_user: root
+      db_password: ${{ steps.random-password-generator.outputs.db_password }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Make It Easy
+    - id: random-password-generator
+      run: |
+       export CHARSET='A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~'
+       export RND_PASSWORD=$(head /dev/urandom | LC_ALL=C tr -dc $CHARSET| head -c 13)
+       echo "$RND_PASSWORD"
+       echo "::set-output name=db_password::$(echo $RND_PASSWORD)"
+       echo "::set-output name=db_user::root"
+      shell: bash
+  Job1:
+    needs: SecureCredentials
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Me!
         run: |
-          touch ~/.my.cnf
-          mysql_config_editor reset
-          mysql_config_editor set \
-          --host=127.0.0.1 \
-          --port=$MYSQL_INTERNAL_PORT \
-          --user=$MYSQL_USER \
-          --login-path=test_db
+          echo $MYSQL_ROOT_PASSWORD
+          echo $MYSQL_USER
         env:
-          MYSQL_USER: root
-          MYSQL_INTERNAL_PORT: ${{ job.services.test_db.ports[3306] }}
-      - name: Show Me Them Databases
-        run: |
-          echo "💾 The Following Databases Are Available"
-          mysql --login-path=test_db <<EOF
-              DROP DATABASE IF EXISTS fuck_everything;
-              CREATE DATABASE fuck_everything;
-          EOF
-          mysql --login-path=test_db -e "SHOW DATABASES;"
-        env:
-          MYSQL_PWD: VerySecret!123
-      - name: Do Some Migrations
-        uses: docker://liquibase/liquibase
-        with:
-          args: >-
-            --username=root
-            --password="VerySecret!123"
-            --classpath=src
-            --changeLogFile=sample.yaml
-            --url=jdbc:mysql://test_db:3306/fuck_everything
-            update
+          MYSQL_ROOT_PASSWORD: ${{ needs.SecureCredentials.outputs.db_password }}
+          MYSQL_USER: ${{ needs.SecureCredentials.outputs.db_user }}
