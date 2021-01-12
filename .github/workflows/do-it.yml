@@ -19,6 +19,7 @@ jobs:
           --health-timeout=2s 
           --health-retries=3
     steps:
+      - uses: actions/checkout@v2
       - name: Make It Easy
         run: |
           touch ~/.my.cnf
