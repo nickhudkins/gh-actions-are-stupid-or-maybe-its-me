@@ -45,6 +45,7 @@ jobs:
               CREATE DATABASE mfp_dev_plans;
               CREATE DATABASE mfp_dev_shard0;
           EOF
+          mysql --login-path=test_db -e "SHOW DATABASES;"
         env:
           MYSQL_PWD: VerySecret!123
       - name: Do Some Migrations
