@@ -12,12 +12,9 @@ jobs:
         ports:
           - 3306
         env:
-          MYSQL_USER: test_db
-          MYSQL_PASSWORD: VerySecret!123
-          MYSQL_DATABASE: nothing_to_see_here
-          MYSQL_ROOT_PASSWORD: qwekdj8whjiY7tgfyHUIO8y7t
+          MYSQL_ROOT_PASSWORD: VerySecret!123
         options: >- 
-          --health-cmd="mysql -u\"$MYSQL_USER\" -p\"$MYSQL_PASSWORD\" -e 'SHOW DATABASES;'" 
+          --health-cmd="mysql -uroot -p\"$MYSQL_ROOT_PASSWORD\" -e 'SHOW DATABASES;'" 
           --health-interval=5s 
           --health-timeout=2s 
           --health-retries=3
@@ -30,12 +27,24 @@ jobs:
           --host=127.0.0.1 \
           --port=${{ job.services.mysql.ports[3306] }} \
           --user=$MYSQL_USER
+          --login-path=test_db
         env:
-          MYSQL_USER: test_db
+          MYSQL_USER: root
       - name: Show Me Them Databases
         run: |
           echo "💾 The Following Databases Are Available"
-          mysql -e "SHOW DATABASES;"
+          mysql --login-path=test_db <<EOF
+              DROP DATABASE IF EXISTS mfp_dev_challenges;
+              DROP DATABASE IF EXISTS mfp_dev_food;
+              DROP DATABASE IF EXISTS mfp_dev_main;
+              DROP DATABASE IF EXISTS mfp_dev_plans;
+              DROP DATABASE IF EXISTS mfp_dev_shard0;
+              CREATE DATABASE mfp_dev_challenges;
+              CREATE DATABASE mfp_dev_food;
+              CREATE DATABASE mfp_dev_main;
+              CREATE DATABASE mfp_dev_plans;
+              CREATE DATABASE mfp_dev_shard0;
+          EOF
         env:
           MYSQL_PWD: VerySecret!123
       - name: Do Some Migrations
