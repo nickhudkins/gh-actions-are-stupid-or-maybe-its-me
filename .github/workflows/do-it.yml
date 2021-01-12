@@ -11,20 +11,17 @@ jobs:
     steps:
     - id: random-password-generator
       run: |
-       export CHARSET='A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~'
-       export RND_PASSWORD=$(head /dev/urandom | LC_ALL=C tr -dc $CHARSET| head -c 13)
+       export CHARSET='A-Za-z0-9!$%=>?@'
+       export RND_PASSWORD=$(head /dev/urandom | LC_ALL=C tr -dc $CHARSET | head -c 20)
        echo "$RND_PASSWORD"
        echo "::set-output name=db_password::$(echo $RND_PASSWORD)"
        echo "::set-output name=db_user::root"
-      shell: bash
-  Job1:
+
+  JobB:
     needs: SecureCredentials
     runs-on: ubuntu-latest
+    env:
+      MYSQL_ROOT_PASSWORD: ${{ needs.SecureCredentials.outputs.db_password }}
     steps:
       - name: Echo Me!
-        run: |
-          echo $MYSQL_ROOT_PASSWORD
-          echo $MYSQL_USER
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ needs.SecureCredentials.outputs.db_password }}
-          MYSQL_USER: ${{ needs.SecureCredentials.outputs.db_user }}
+        run: echo "Hello THERE=== $MYSQL"
