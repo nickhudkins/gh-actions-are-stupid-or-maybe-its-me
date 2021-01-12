@@ -34,16 +34,8 @@ jobs:
         run: |
           echo "💾 The Following Databases Are Available"
           mysql --login-path=test_db <<EOF
-              DROP DATABASE IF EXISTS mfp_dev_challenges;
-              DROP DATABASE IF EXISTS mfp_dev_food;
-              DROP DATABASE IF EXISTS mfp_dev_main;
-              DROP DATABASE IF EXISTS mfp_dev_plans;
-              DROP DATABASE IF EXISTS mfp_dev_shard0;
-              CREATE DATABASE mfp_dev_challenges;
-              CREATE DATABASE mfp_dev_food;
-              CREATE DATABASE mfp_dev_main;
-              CREATE DATABASE mfp_dev_plans;
-              CREATE DATABASE mfp_dev_shard0;
+              DROP DATABASE IF EXISTS fuck_everything;
+              CREATE DATABASE fuck_everything;
           EOF
           mysql --login-path=test_db -e "SHOW DATABASES;"
         env:
@@ -51,4 +43,9 @@ jobs:
       - name: Do Some Migrations
         uses: docker://liquibase/liquibase
         with:
-          args: --version
+          args: >-
+            --username=root
+            --password=VerySecret\!123
+            --classpath=src
+            --changeLogFile=sample.yaml
+            --url=jdbc:mysql://127.0.0.1:${{ job.services.mysql.ports[3306] }}/fuck_everything
