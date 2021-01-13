@@ -25,3 +25,9 @@ jobs:
     steps:
       - name: Echo Me!
         run: echo "Hello THERE=== $MYSQL"
+
+  JobC:
+    runs-on: ubuntu-latest
+    steps:
+      - name: What
+        run: docker --version
